@@ -19,6 +19,10 @@ const Home = () => {
             toast.error('ROOM ID & username is required');
             return;
         }
+        if(username.length < 2){
+            toast.error('username is too small');
+            return;
+        }
         navigate(`/room/${roomId}`,{
             state:{
                 username,
