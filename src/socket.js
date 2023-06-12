@@ -8,5 +8,5 @@ export const initSocket = async () => {
         transports: ['websocket'],
         upgrade: true,
     };
-    return io('https://codeedi.onrender.com/', options);
+    return io('http://localhost:5000/', options);
 };
