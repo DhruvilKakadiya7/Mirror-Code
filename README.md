@@ -25,7 +25,7 @@ check it here https://mirrorcode.netlify.app/
       </ul>
     </li>
     <li>
-       <a href="https://github.com/DhruvilKakadiya7/Mirror-Code/edit/main/README.md#contact-">Contact</a>
+       <a href="#contact">Contact</a>
     </li>
   </ol>
 </details>
