@@ -1,6 +1,6 @@
 # Mirror-Code
 
-check it here https://mirrorcode.netlify.app/
+Check it here https://mirrorcode.netlify.app/
 
 ## To-Do
 - [ ] Add Compiler
