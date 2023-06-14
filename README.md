@@ -32,7 +32,7 @@ Check it here https://mirrorcode.netlify.app/
 
 
 ## About the Project <span id="about-the-project"></span>
-![Screenshot 2023-06-12 134838.png](https://img1.imgtp.com/2023/06/12/G0N8risf.png)
+![Screenshot 2023-06-14 185312.png](https://img1.imgtp.com/2023/06/14/fQDm7T11.png)
 
 ### Features <span id="features"></span>
 - User can create room with roomId of own choice.
