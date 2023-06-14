@@ -75,12 +75,3 @@ npm start
 Dhruvil Kakadiya - [@Dhruvil Kakadiya](https://github.com/DhruvilKakadiya7) - kakadiyadhruvil3006@gmail.com
 
 Project Link: https://github.com/DhruvilKakadiya7/Mirror-Code
-<<<<<<< HEAD
-=======
-
-
-
-
-
-
->>>>>>> e517c679396531f83abc888ad2b734fda4d51d8b
