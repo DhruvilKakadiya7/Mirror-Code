@@ -1,70 +1,77 @@
-# Getting Started with Create React App
+# Mirror-Code
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Check it here https://mirrorcode.netlify.app/
 
-## Available Scripts
+## To-Do
+- [ ] Add Compiler
+- [ ] Improve UI
+- [ ] Improve Auto Language detection
+- [ ] Add Database
 
-In the project directory, you can run:
+<details>
+  <summary>Table of contents</summary>
+  <ol>
+    <li> 
+      <a href="#about-the-project">About the project</a> 
+      <ul>
+        <li> <a href="#features">Features</a> </li>
+        <li> <a href="#built-with">Built With</a> </li>
+      </ul>
+    </li>     
+    <li> 
+      <a href="#getting-started">Getting Started</a> 
+      <ul>
+        <li> <a href="#installation">Installation</a> </li>
+      </ul>
+    </li>
+    <li>
+       <a href="#contact">Contact</a>
+    </li>
+  </ol>
+</details>
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## About the Project <span id="about-the-project"></span>
+![Screenshot 2023-06-12 134838.png](https://img1.imgtp.com/2023/06/12/G0N8risf.png)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Features <span id="features"></span>
+- User can create room with roomId of own choice.
+- Anyone can join room with already created roomId.
+- Every user in one room can work on same code.
+- Every room has own message room where users of same room can communicate via chat.
 
-### `npm test`
+### Built With <span id="built-with"></span>
+- [NodeJs](https://nodejs.org/en)
+- [ExpressJs](https://expressjs.com/)
+- [ReactJs](https://reactjs.org/)
+- [socket.io](https://socket.io/)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Getting Started <span id="getting-started"></span>
+This is an example of how you may give instructions on setting up your project locally. To get a local copy up and running follow these simple example steps.
 
-### `npm run build`
+### Installation <span id="installation"></span>
+Fork, then download or clone the repo.
+```
+git clone https://github.com/DhruvilKakadiya7/Mirror-Code.git
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Install the dependecy for server and react
+```
+npm install
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Run Server
+```
+nodemon server.js
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Run React app
+```
+npm start
+```
 
-### `npm run eject`
+## Contact <span id="contact"></span>
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Dhruvil Kakadiya - [@Dhruvil Kakadiya](https://github.com/DhruvilKakadiya7) - kakadiyadhruvil3006@gmail.com
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Project Link: https://github.com/DhruvilKakadiya7/Mirror-Code
