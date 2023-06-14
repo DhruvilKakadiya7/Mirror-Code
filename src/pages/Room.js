@@ -8,6 +8,7 @@ import ACTIONS from '../Actions';
 import MessageBox from '../components/MessageBox';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 const Room = () => {
+    // alert('hi');
     const socketRef = useRef(null);
     const [users, setUsers] = useState([])
     const reactNavigator = useNavigate();
@@ -99,8 +100,6 @@ const Room = () => {
     }
     return (
         <div className='mainWrap'>
-            
-
             <div className='editorWrap'>
                 <Editor
                     roomId={roomId} 
@@ -145,6 +144,6 @@ const Room = () => {
             </div>
         </div>
     )
-}
+};
 
-export default Room
+export default Room;

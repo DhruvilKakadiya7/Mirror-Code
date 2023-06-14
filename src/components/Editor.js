@@ -85,7 +85,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
             socketRef.current.off(ACTIONS.CODE_CHANGE);
         };
     }, [socketRef.current]);
-
+    // alert('editor');
     return (
         <div id="xxx">
             <textarea id="Editor"></textarea>

@@ -23,6 +23,7 @@ const Home = () => {
             toast.error('username is too small');
             return;
         }
+        console.log(roomId,username);
         navigate(`/room/${roomId}`,{
             state:{
                 username,

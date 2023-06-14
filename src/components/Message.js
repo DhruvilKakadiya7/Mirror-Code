@@ -58,3 +58,5 @@ const Message = ({ sender, time, content }) => {
   );
 };
 
+export default Message;
+
