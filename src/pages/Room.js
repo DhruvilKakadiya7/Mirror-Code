@@ -11,16 +11,6 @@ import SplitPane, { Pane } from 'split-pane-react';
 import 'split-pane-react/esm/themes/default.css';
 
 const Room = () => {
-    // alert('hi');
-    function style(color) {
-        return {
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: color
-        };
-    }
     const socketRef = useRef(null);
     const [users, setUsers] = useState([])
     const reactNavigator = useNavigate();
@@ -82,7 +72,7 @@ const Room = () => {
             socketRef.current.off(ACTIONS.JOINED);
             socketRef.current.off(ACTIONS.DISCONNECTED);
         };
-    }, []);
+    }, [location.state?.username,reactNavigator,roomId]);
 
 
 

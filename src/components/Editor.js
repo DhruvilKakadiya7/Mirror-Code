@@ -12,7 +12,6 @@ import 'codemirror/mode/htmlmixed/htmlmixed';
 import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/closebrackets';
 import ACTIONS from '../Actions';
-import guessProgrammingLanguage from 'guess-programming-language'
 import CustomInput from './CustomInput';
 import OutputDetails from './OutputDetails';
 import axios from 'axios';
@@ -21,7 +20,6 @@ import { languageOptions } from '../constants/languageOptions';
 import Select from 'react-select';
 import SplitPane, { Pane } from 'split-pane-react';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import { detect, languages, LANG } from 'program-language-detector';
 const Editor = ({ socketRef, roomId, onCodeChange }) => {
 
     const editorRef = useRef(null);
@@ -49,7 +47,6 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                 const { origin } = changes;
                 const code = instance.getValue();
                 setCode(code);
-                console.log('lang',detect(code));
                 onCodeChange(code);
                 if (origin !== 'setValue') {
                     socketRef.current.emit(ACTIONS.CODE_CHANGE, {

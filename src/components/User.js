@@ -10,9 +10,6 @@ const User = ({username}) => {
         degrees.push(i);
         degrees.push(-i);
     }
-    const rnd1 = ()=>{
-        return Math.floor(Math.random() * degrees.length);
-    }
     const avatar = createAvatar(initials, {
         seed: username,
         radius: 30,
