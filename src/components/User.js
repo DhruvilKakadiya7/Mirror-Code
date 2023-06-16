@@ -5,9 +5,6 @@ import Svg from "react-inlinesvg";
 
 const User = ({username}) => {
     const colors = ["00897b","00acc1","039be5","3949ab","43a047","8e24aa","7cb342","43a047","d81b60","c0ca33","f4511e","e53935"];
-    const rnd = ()=>{
-        return Math.floor(Math.random() * colors.length);
-    }
     const degrees = [];
     for(let i=0;i<360;i+=10){
         degrees.push(i);
@@ -16,14 +13,13 @@ const User = ({username}) => {
     const rnd1 = ()=>{
         return Math.floor(Math.random() * degrees.length);
     }
-    
     const avatar = createAvatar(initials, {
         seed: username,
         radius: 30,
         size: 50,
-        backgroundColor: [colors[rnd()],colors[rnd()]],
+        backgroundColor: [colors[username.length%12],colors[(username.length+20)%12]],
         backgroundType: ["gradientLinear"],
-        backgroundRotation: [degrees[rnd1()]],
+        backgroundRotation: [colors[username.length%12]],
         fontFamily: ["Tahoma","Arial"],
     });
 

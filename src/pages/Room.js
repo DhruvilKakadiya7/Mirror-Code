@@ -7,15 +7,28 @@ import { initSocket } from '../socket';
 import ACTIONS from '../Actions';
 import MessageBox from '../components/MessageBox';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import SplitPane, { Pane } from 'split-pane-react';
+import 'split-pane-react/esm/themes/default.css';
+
 const Room = () => {
     // alert('hi');
+    function style(color) {
+        return {
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: color
+        };
+    }
     const socketRef = useRef(null);
     const [users, setUsers] = useState([])
     const reactNavigator = useNavigate();
     const location = useLocation();
     const codeRef = useRef(null);
     const { roomId } = useParams();
-    const usr = {name: location.state?.username};
+    const usr = { name: location.state?.username };
+    const [sizes, setSizes] = useState(['86%', '14%']);
     useEffect(() => {
         const init = async () => {
             socketRef.current = await initSocket();
@@ -48,7 +61,7 @@ const Room = () => {
             );
 
             socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
-                    console.log('okk',code);
+                console.log('okk', code);
             });
 
             socketRef.current.on(
@@ -64,7 +77,7 @@ const Room = () => {
             );
         };
         init();
-        return ()=>{
+        return () => {
             socketRef.current.disconnect();
             socketRef.current.off(ACTIONS.JOINED);
             socketRef.current.off(ACTIONS.DISCONNECTED);
@@ -83,12 +96,13 @@ const Room = () => {
         }
     }
 
-    const openChat = async()=>{
-        document.getElementById("chat").style.display = "block";
+    const openChat = async () => {
+        document.getElementById("chat").style.display = "flex";
         document.getElementById("sidebar").style.display = "none";
         // background-color:#7d777d;
         document.getElementById("aside").style.background = "#27374D";
         document.getElementById("msg").style.display = "none";
+        document.getElementById("leave").style.display = "none";
     }
 
     const leaveRoom = () => {
@@ -99,49 +113,57 @@ const Room = () => {
         return <Navigate to="/" />
     }
     return (
+
         <div className='mainWrap'>
-            <div className='editorWrap'>
-                <Editor
-                    roomId={roomId} 
-                    socketRef={socketRef} 
-                    codeRef={codeRef}
-                    onCodeChange = {(code)=>{
-                        codeRef.current=code;
-                    }} 
-                    />
-            </div>
-            <div className='aside' id='aside'>
-                <MessageBox socketRef={socketRef} usr={usr} roomId={roomId}></MessageBox>
-                
-                <div className='asideInner' id='sidebar'>
-                    <div class="flex-parent-element">
-                        <div class="flex-child-element magenta"><h4>Online:</h4></div>
-                        <div class="flex-child-element green tooltip">
-                            <ContentCopyIcon id="copy-btn" onClick={cpyRoomID}/>
-                            <span class="tooltiptext">Copy RoomId</span>
+            <SplitPane
+                split='vertical'
+                sizes={sizes}
+                onChange={setSizes}
+            >
+                <Pane minSize='50%' maxSize='90%'>
+                <div className='editorWrap'>
+                        <Editor
+                            roomId={roomId}
+                            socketRef={socketRef}
+                            codeRef={codeRef}
+                            onCodeChange={(code) => {
+                                codeRef.current = code;
+                            }}
+                        />
+                    </div>
+                </Pane>
+                <div className='aside' id='aside'>
+                        <MessageBox socketRef={socketRef} usr={usr} roomId={roomId}></MessageBox>
+
+                        <div className='asideInner' id='sidebar'>
+                            <div className="parent-element">
+                                <div className="child-element magenta"><h4>Online:</h4></div>
+                                <div className="child-element green tooltip">
+                                    <ContentCopyIcon id="copy-btn" onClick={cpyRoomID} />
+                                    <span className="tooltiptext">Copy RoomId</span>
+                                </div>
+                            </div>
+                            <br></br>
+                            <div className='usersList'>
+                                {users.map((user) => (
+                                    <User
+                                        key={user.socketId}
+                                        username={user.username}
+                                    />
+                                ))}
+                            </div>
                         </div>
+
+                        <button className='btnxx copyBtn' id='msg' onClick={openChat}>
+                            Message Room
+                        </button>
+                        <button className='btnxx2 leaveBtn' id="leave" onClick={leaveRoom}>
+                            Leave
+                        </button>
                     </div>
-                    <br></br>
-                    <div className='usersList'>
-                        {users.map((user) => (
-                            <User
-                                key={user.socketId}
-                                username={user.username}
-                            />
-                        ))}
-                    </div>
-                </div>
-                
-                <button className='btnxx copyBtn' id='msg' onClick={openChat}>
-                    Message Room
-                </button>
-                {/* <button className='btnxx copyBtn' onClick={cpyRoomID}>
-                    Copy ROOM ID
-                </button> */}
-                <button className='btnxx2 leaveBtn' onClick={leaveRoom}>
-                    Leave
-                </button>
-            </div>
+            </SplitPane>
+
+
         </div>
     )
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Codemirror from 'codemirror';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/monokai.css';
@@ -13,49 +13,43 @@ import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/closebrackets';
 import ACTIONS from '../Actions';
 import guessProgrammingLanguage from 'guess-programming-language'
-
+import CustomInput from './CustomInput';
+import OutputDetails from './OutputDetails';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
+import { languageOptions } from '../constants/languageOptions';
+import Select from 'react-select';
+import SplitPane, { Pane } from 'split-pane-react';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import { detect, languages, LANG } from 'program-language-detector';
 const Editor = ({ socketRef, roomId, onCodeChange }) => {
+
     const editorRef = useRef(null);
-    useEffect(() => { 
+    const [customInput, setCustomInput] = useState(``);
+    const [outputDetails, setOutputDetails] = useState(null);
+    const [running, setRunning] = useState(null);
+    const [Code, setCode] = useState(``);
+    const [languge, setLanguage] = useState(languageOptions[0]);
+    const [sizes, setSizes] = useState(['70%', '30%']);
+    useEffect(() => {
         async function init() {
             editorRef.current = Codemirror.fromTextArea(
                 document.getElementById('Editor'),
                 {
-                    mode: { name: 'htmlmixed', json: true },
+                    mode: { name: 'text/x-c++src', json: true },
                     theme: 'monokai',
                     autoCloseTags: true,
                     autoCloseBrackets: true,
                     lineNumbers: true,
+                    height: '85vh'
                 }
             );
-            editorRef.current.setSize(null,500);
+            editorRef.current.setSize(null, 500);
             editorRef.current.on('change', async (instance, changes) => {
-                // clearTimeout(pending);
-                // pending = setTimeout(update(instance), 400);
                 const { origin } = changes;
                 const code = instance.getValue();
-                let lang = await guessProgrammingLanguage(code);
-                // console.log("1",lang);
-                if(lang === 'apache' || lang==='xml'){
-                    lang = 'htmlmixed'
-                }
-                else if(lang === 'crystal'){
-                    lang = 'javascript'
-                }
-                else if(lang === 'css'){
-                    lang = 'css'
-                }
-                else if(lang==='cpp'){
-                    lang = 'text/x-c++src';
-                }
-                else if(lang === 'python' || lang==='routeros' || lang==='isbl'){
-                    lang = 'python'
-                }
-                else{
-                    lang = 'javascript'
-                }
-                // console.log(lang);
-                editorRef.current.setOption("mode",lang);
+                setCode(code);
+                console.log('lang',detect(code));
                 onCodeChange(code);
                 if (origin !== 'setValue') {
                     socketRef.current.emit(ACTIONS.CODE_CHANGE, {
@@ -69,29 +63,150 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
     }, []);
 
     useEffect(() => {
-        async function init(){
+        async function init() {
             if (socketRef.current) {
                 socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
-                    // console.log(code);
                     if (code !== null) {
                         editorRef.current.setValue(code);
                     }
                 });
             }
         }
-        
+
         init();
         return () => {
             socketRef.current.off(ACTIONS.CODE_CHANGE);
         };
     }, [socketRef.current]);
-    // alert('editor');
+
+
+    const handleCompile = async () => {
+        setRunning(true);
+        const compileData = {
+            language_id: languge.id,
+            source_code: btoa(Code),
+            stdin: btoa(customInput),
+        };
+        const options = {
+            method: 'POST',
+            url: process.env.REACT_APP_RAPID_API_URL,
+            params: {
+                base64_encoded: 'true',
+                fields: '*'
+            },
+            headers: {
+                'content-type': 'application/json',
+                'Content-Type': 'application/json',
+                'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
+                'X-RapidAPI-Host': process.env.REACT_APP_RAPID_API_HOST,
+            },
+            data: compileData
+        };
+        try {
+            const response = await axios.request(options);
+            checkStatus(response.data.token);
+        } catch (err) {
+            let error = err.response ? err.response.data : err;
+            setRunning(false);
+            console.log(error);
+        }
+    };
+    const checkStatus = async (token) => {
+        const options = {
+            method: "GET",
+            url: process.env.REACT_APP_RAPID_API_URL + "/" + token,
+            params: { base64_encoded: "true", fields: "*" },
+            headers: {
+                "X-RapidAPI-Host": process.env.REACT_APP_RAPID_API_HOST,
+                "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY,
+            },
+        };
+        try {
+            let response = await axios.request(options);
+            let statusId = response.data.status?.id;
+            if (statusId === 1 || statusId === 2) {
+                setTimeout(() => {
+                    checkStatus(token)
+                }, 2000)
+                return
+            } else {
+                setRunning(false);
+                setOutputDetails(response.data)
+                toast.success('Compiled Successfully.');
+                return
+            }
+        } catch (err) {
+            console.log("err", err);
+            setRunning(false);
+            toast.error('Compilation failed');
+        }
+    };
+
+    const clrInpOut = () => {
+        setCustomInput(``);
+        setOutputDetails(null);
+    };
+
+    const onSelectChange = (sl) => {
+        setLanguage(sl);
+    };
     return (
-        <div id="xxx">
-            <textarea id="Editor"></textarea>
-        </div>
-        
+        <div id="xxx ">
+            <div className="mainEditor">
+                <SplitPane
+                    split='vertical'
+                    sizes={sizes}
+                    onChange={setSizes}
+                >
+                    <Pane minSize='40%' maxSize='80%'>
+                        <div className='left-container'>
+                            <textarea id="Editor"></textarea>
+                        </div>
+                    </Pane>
+                    <div className='right-container'>
+                        <div className='lang-select'>
+                            <Select
+                                placeholder={`Filter By Category`}
+                                options={languageOptions}
+                                // styles={customStyles}
+                                defaultValue={languageOptions[0]}
+                                onChange={(selectedOption) => onSelectChange(selectedOption)}
+                            />
+                        </div>
+                        <h4 className='inp-out'>Input:</h4>
+                        <div className='input-box'>
+                            <CustomInput
+                                customInput={customInput}
+                                setCustomInput={setCustomInput}
+                            />
+                        </div>
+                        <div className='run'>
+                            <button className="run-btn" onClick={handleCompile}>
+                                <PlayArrowIcon sx={{ fontSize: 20 }}></PlayArrowIcon>
+                                {running ? "Running..." : "Run"}
+                            </button>
+                        </div>
+                        <h4 className='inp-out'>Output:</h4>
+                        <div className='output-box'>
+                            <OutputDetails
+                                outputDetails={outputDetails}
+                            >
+                            </OutputDetails>
+                        </div>
+                        <div className='clear'>
+                            <button className="clear-btn" onClick={clrInpOut}>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </SplitPane>
+            </div>
+
+
+        </div >
+
     );
 };
 
 export default Editor;
+

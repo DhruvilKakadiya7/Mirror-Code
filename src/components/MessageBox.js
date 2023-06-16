@@ -8,23 +8,15 @@ import Message from './Message';
 import { useEffect, useRef } from 'react';
 import ACTIONS from '../Actions';
 import { toast } from 'react-hot-toast';
+import LogoutIcon from '@mui/icons-material/Logout';
 const MessageBox = ({ socketRef, usr, roomId }) => {
     const hideChatWindow = async () => {
         document.getElementById('chat').style.display = 'none';
         document.getElementById('sidebar').style.display = 'block';
         document.getElementById("aside").style.background = "#1c1e29";
         document.getElementById("msg").style.display = "block";
+        document.getElementById("leave").style.display = "block";
     }
-    const getTime = async () => {
-        var today = new Date();
-        let hours = today.getHours() > 12 ? today.getHours() - 12 : today.getHours();
-        let d = today.getHours() > 12 ? "PM" : "AM";
-        let time = hours + " : " + today.getMinutes();
-        time = time + " " + d;
-        time = time.toString();
-        return time;
-    }
-
 
     const [myMsg, setMyMsg] = useState("");
     const [allMessages, setAllMessages] = useState([]);
@@ -55,7 +47,7 @@ const MessageBox = ({ socketRef, usr, roomId }) => {
                 var today = new Date();
                 let hours = today.getHours() > 12 ? today.getHours() - 12 : today.getHours();
                 let d = today.getHours() > 12 ? "PM" : "AM";
-                let time = hours + " : " + today.getMinutes();
+                let time = hours + ":" + today.getMinutes();
                 time = time + " " + d;
                 if (xxx != null && xxx != "") {
                     console.log(xxx);
@@ -82,13 +74,13 @@ const MessageBox = ({ socketRef, usr, roomId }) => {
 
     return (
         <div id='chat'>
-            <div className="close_chat_window flex-parent-element">
-                <div className='flex-child-element magenta'>
-                    <h3>In-Room messages</h3>
+            <div className="close_chat_window parent-element">
+                <div className='child-element magenta'>
+                    <h3>Messages</h3>
                 </div>
-                <div className="flex-child-element green tooltip">
-                    <CloseIcon onClick={hideChatWindow} />
-                    <span class="tooltiptext">Leave Message Room</span>
+                <div className="child-element green tooltip">
+                    <LogoutIcon onClick={hideChatWindow} />
+                    <span className="tooltiptext">Leave Message Room</span>
                 </div>
             </div>
             <div className="chat_window_info_para">
@@ -100,7 +92,6 @@ const MessageBox = ({ socketRef, usr, roomId }) => {
             <div id="outer">
                 <div className="chat_messages_block">
                     {allMessages.map((message) => {
-                        // console.log("ok",message);
                         return (
                             <>
                                 <Message
@@ -113,19 +104,16 @@ const MessageBox = ({ socketRef, usr, roomId }) => {
                     })}
                 </div>
             </div>
-            {/* <br></br> */}
             <div className="chat_send_message" id="chat_send">
                 <TextField
                     id="message-box"
                     onChange={(e) => {
                         setMyMsg(e.target.value);
                         msgTmp = myMsg;
-                        // console.log("msg",myMsg);
-                       
                     }}
                     value={myMsg}
                     margin="normal"
-                    inputProps={{ style: { color: "white", overflow: "hidden"}}}
+                    inputProps={{ style: { color: "white", overflow: "hidden", width: '100%'}}}
                     multiline
                     maxRows={2}
                     minRows={0}
@@ -135,7 +123,7 @@ const MessageBox = ({ socketRef, usr, roomId }) => {
                         borderRadius: 1
                       }}
                 />
-                <Button variant="contained" color="success" ref={msgRef}>
+                <Button variant="contained" color="success" ref={msgRef} className='sendbtn'>
                     Send
                 </Button>
             </div>
