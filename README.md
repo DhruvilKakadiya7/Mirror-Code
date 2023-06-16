@@ -4,7 +4,7 @@
 Check it here https://mirrorcode.netlify.app/
 
 ## To-Do
-- [ ] Add Compiler
+- [x] Add Compiler
 - [ ] Improve UI
 - [ ] Improve Auto Language detection
 - [ ] Add Database
