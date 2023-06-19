@@ -1,9 +1,10 @@
 # Mirror-Code
+[![Netlify Status](https://api.netlify.com/api/v1/badges/b4fec894-1c75-48be-942a-092c06ce20dd/deploy-status)](https://app.netlify.com/sites/mirrorcode/deploys)
 
 Check it here https://mirrorcode.netlify.app/
 
 ## To-Do
-- [ ] Add Compiler
+- [x] Add Compiler
 - [ ] Improve UI
 - [ ] Improve Auto Language detection
 - [ ] Add Database
@@ -32,7 +33,7 @@ Check it here https://mirrorcode.netlify.app/
 
 
 ## About the Project <span id="about-the-project"></span>
-![Screenshot 2023-06-14 185312.png](https://img1.imgtp.com/2023/06/14/fQDm7T11.png)
+![Screenshot 2023-06-16 133444.png](https://img1.imgtp.com/2023/06/16/vcPifMaz.png)
 
 ### Features <span id="features"></span>
 - User can create room with roomId of own choice.
