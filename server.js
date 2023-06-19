@@ -43,9 +43,19 @@ io.on('connection', (socket) => {
         io.to(socketId).emit(ACTIONS.CODE_CHANGE, { code });
     });
     socket.on(ACTIONS.MSG, ({ roomId, msg, name, time }) => {
-        console.log('msg rcv');
+        // console.log('msg rcv');
         socket.in(roomId).emit("recive", { msg, name, time });
     });
+    socket.on('Compile',({outputRes, roomId})=>{
+        // console.log(outputRes,roomId);
+        socket.in(roomId).emit("Compile",{outputRes});
+    })
+    socket.on('Onrun',({roomId})=>{
+        socket.in(roomId).emit("Onrun",{running:true});
+    })
+    socket.on('CustomInp',({custInp, roomId})=>{
+        socket.in(roomId).emit("CustomInp",{custInp});
+    })
     socket.on('disconnecting', () => {
         const rooms = [...socket.rooms];
         rooms.forEach((roomId) => {

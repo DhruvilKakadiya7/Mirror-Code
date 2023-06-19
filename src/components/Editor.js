@@ -29,6 +29,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
     const [Code, setCode] = useState(``);
     const [languge, setLanguage] = useState(languageOptions[0]);
     const [sizes, setSizes] = useState(['70%', '30%']);
+
     useEffect(() => {
         async function init() {
             editorRef.current = Codemirror.fromTextArea(
@@ -55,6 +56,14 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                     });
                 }
             });
+            const textInp = document.getElementById('custom-input-text');
+            console.log(textInp);
+            if (textInp) {
+                textInp.addEventListener('input', (event) => {
+                    console.log(textInp.value);
+                    socketRef.current.emit('CustomInp', { custInp: textInp.value, roomId });
+                })
+            }
         }
         init();
     }, []);
@@ -66,6 +75,25 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                     if (code !== null) {
                         editorRef.current.setValue(code);
                     }
+                });
+
+                socketRef.current.on("Compile", ({ outputRes }) => {
+                    setOutputDetails(outputRes);
+                    setRunning(false);
+                    toast.success('Compiled Successfully.');
+                });
+
+                socketRef.current.on("Input", ({ inp }) => {
+                    setCustomInput(inp);
+                    setRunning(true);
+                })
+
+                socketRef.current.on('CustomInp', ({ custInp }) => {
+                    setCustomInput(custInp);
+                })
+
+                socketRef.current.on('Onrun',({running})=>{
+                    setRunning(running);
                 });
             }
         }
@@ -84,6 +112,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
             source_code: btoa(Code),
             stdin: btoa(customInput),
         };
+        socketRef.current.emit('Onrun',{roomId});
         const options = {
             method: 'POST',
             url: process.env.REACT_APP_RAPID_API_URL,
@@ -128,7 +157,8 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                 return
             } else {
                 setRunning(false);
-                setOutputDetails(response.data)
+                setOutputDetails(response.data);
+                socketRef.current.emit('Compile', { outputRes: response.data, roomId });
                 toast.success('Compiled Successfully.');
                 return
             }
@@ -175,6 +205,8 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                             <CustomInput
                                 customInput={customInput}
                                 setCustomInput={setCustomInput}
+                                socketRef={socketRef}
+                                roomId={roomId}
                             />
                         </div>
                         <div className='run'>

@@ -1,6 +1,9 @@
 import React from "react";
+import { useEffect } from "react";
 
-const CustomInput = ({ customInput, setCustomInput }) => {
+const CustomInput = ({ customInput, setCustomInput, socketRef, roomId }) => {
+  // useEffect()
+
   return (
     <>
       {" "}
