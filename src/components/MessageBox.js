@@ -8,6 +8,8 @@ import { useEffect, useRef } from 'react';
 import ACTIONS from '../Actions';
 import { toast } from 'react-hot-toast';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { v4 as uuidv4 } from 'uuid';
+
 const MessageBox = ({ socketRef, usr, roomId }) => {
     const hideChatWindow = async () => {
         document.getElementById('chat').style.display = 'none';
@@ -46,7 +48,7 @@ const MessageBox = ({ socketRef, usr, roomId }) => {
                 var today = new Date();
                 let hours = today.getHours() > 12 ? today.getHours() - 12 : today.getHours();
                 let d = today.getHours() > 12 ? "PM" : "AM";
-                let time = hours + ":" + today.getMinutes();
+                let time = hours + ":" + (today.getMinutes()<10?"0"+today.getMinutes():today.getMinutes());
                 time = time + " " + d;
                 if (xxx != null && xxx != "") {
                     console.log(xxx);
@@ -58,6 +60,7 @@ const MessageBox = ({ socketRef, usr, roomId }) => {
                     });
                     msgTmp = "";
                     const message = {
+                        uid: uuidv4(),
                         sender: usr.name,
                         content: xxx,
                         sentTime: time,
@@ -77,9 +80,8 @@ const MessageBox = ({ socketRef, usr, roomId }) => {
                 <div className='child-element magenta'>
                     <h3>Messages</h3>
                 </div>
-                <div className="child-element green tooltip">
-                    <LogoutIcon onClick={hideChatWindow} />
-                    <span className="tooltiptext">Leave Message Room</span>
+                <div className="child-element green tooltip" title='leave message room'>
+                    <LogoutIcon onClick={hideChatWindow}/>
                 </div>
             </div>
             <div className="chat_window_info_para">
@@ -94,6 +96,8 @@ const MessageBox = ({ socketRef, usr, roomId }) => {
                         return (
                             <>
                                 <Message
+                                    key={message.uid}
+                                    uid={message.uid}
                                     sender={message.sender}
                                     time={message.sentTime}
                                     content={message.content}

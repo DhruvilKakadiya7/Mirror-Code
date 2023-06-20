@@ -161,9 +161,8 @@ const Room = () => {
                         <div className='asideInner' id='sidebar'>
                             <div className="parent-element">
                                 <div className="child-element magenta"><h4>Online:</h4></div>
-                                <div className="child-element green tooltip">
+                                <div className="child-element green tooltip" title='copy room ID'>
                                     <ContentCopyIcon id="copy-btn" onClick={cpyRoomID} />
-                                    <span className="tooltiptext">Copy RoomId</span>
                                 </div>
                             </div>
                             <br></br>

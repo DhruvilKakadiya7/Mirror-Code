@@ -664,8 +664,10 @@ iframe {
 .chat_message_upper_row {
   display: flex;
   padding: 0px 0px 5px;
+  padding-bottom: 0px;
   white-space: pre-wrap;
   word-break: break-all;
+  border-bottom: 2px dotted grey;
 }
 
 .chat_message_sender_name,

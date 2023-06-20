@@ -1,7 +1,7 @@
 import { Avatar } from "@mui/material";
 import React from "react";
 import { v4 as uuidv4 } from 'uuid'
-const Message = ({ sender, time, content }) => {
+const Message = ({ uid, sender, time, content }) => {
   function stringToColor(string) {
     let hash = 0;
     let i;
@@ -32,7 +32,7 @@ const Message = ({ sender, time, content }) => {
     };
   }
   return (
-    <div className="chat_message" key={uuidv4()}>
+    <div className="chat_message" key={uid}>
       <div className="message_sender_avatar">
         <Avatar 
           {...stringAvatar(sender)} 
