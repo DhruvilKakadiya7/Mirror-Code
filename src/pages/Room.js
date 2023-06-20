@@ -9,6 +9,7 @@ import MessageBox from '../components/MessageBox';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import SplitPane, { Pane } from 'split-pane-react';
 import 'split-pane-react/esm/themes/default.css';
+import { languageOptions } from '../constants/languageOptions';
 
 const Room = () => {
     const socketRef = useRef(null);
@@ -19,9 +20,17 @@ const Room = () => {
     const { roomId } = useParams();
     const usr = { name: location.state?.username };
     const [sizes, setSizes] = useState(['86%', '14%']);
+    const customInpRef = useRef(null);
+    const outputRef = useRef(null);
+    const runningRef = useRef(null);
+    const langRef = useRef(null);
+    
     useEffect(() => {
         const init = async () => {
             socketRef.current = await initSocket();
+            customInpRef.current="";
+            langRef.current=languageOptions[0];
+            runningRef.current=false;
             socketRef.current.on('connect_error', (err) => handleErrors(err));
             socketRef.current.on('connect_failed', (err) => handleErrors(err));
 
@@ -41,12 +50,24 @@ const Room = () => {
                     if (username !== location.state?.username) {
                         toast.success(`${username} joined the room.`);
                         console.log(`${username} joined.`);
-                    }
+                    } 
                     setUsers(users);
                     socketRef.current.emit(ACTIONS.SYNC_CODE, {
                         code: codeRef.current,
                         socketId,
                     });
+                    // console.log("sync",document.getElementById('custom-input-text').value,langRef.current);
+                    // console.log('Input',customInpRef.current);
+                    // console.log('output',outputRef.current);
+                    // console.log('language',langRef.current);
+                    // console.log('running',runningRef.current);
+                    socketRef.current.emit(ACTIONS.SYNC_INP_OUT_SEC,{
+                        inp: customInpRef.current,
+                        out: outputRef.current,
+                        lang: langRef.current,
+                        running: runningRef.current,
+                        socketId,
+                    })
                 }
             );
 
@@ -118,6 +139,18 @@ const Room = () => {
                             codeRef={codeRef}
                             onCodeChange={(code) => {
                                 codeRef.current = code;
+                            }}
+                            onInpChnage={(inp)=>{
+                                customInpRef.current = inp;
+                            }}
+                            onRunChnage={(running)=>{
+                                runningRef.current = running;
+                            }}
+                            onOutputChange={(output)=>{
+                                outputRef.current=output;
+                            }}
+                            onLangChange={(lang)=>{
+                                langRef.current=lang;
                             }}
                         />
                     </div>

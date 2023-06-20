@@ -16,7 +16,7 @@ const User = ({username}) => {
         size: 50,
         backgroundColor: [colors[username.length%12],colors[(username.length+20)%12]],
         backgroundType: ["gradientLinear"],
-        backgroundRotation: [colors[username.length%12]],
+        backgroundRotation: [degrees[username.length%12]],
         fontFamily: ["Tahoma","Arial"],
     });
 

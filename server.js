@@ -39,22 +39,29 @@ io.on('connection', (socket) => {
     socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {
         socket.in(roomId).emit(ACTIONS.CODE_CHANGE, { code });
     });
+    socket.on(ACTIONS.SYNC_INP_OUT_SEC,({inp,out,lang,running,socketId})=>{
+        io.to(socketId).emit(ACTIONS.CUSTOM_INP_CHANGE,{custInp:inp});
+        io.to(socketId).emit(ACTIONS.LANG_CHANGE,{lang});
+        io.to(socketId).emit(ACTIONS.COMPILED,{outputRes:out});
+        io.to(socketId).emit(ACTIONS.RUN_CHANGE,{running});
+    })
     socket.on(ACTIONS.SYNC_CODE, ({ socketId, code }) => {
         io.to(socketId).emit(ACTIONS.CODE_CHANGE, { code });
     });
     socket.on(ACTIONS.MSG, ({ roomId, msg, name, time }) => {
-        // console.log('msg rcv');
         socket.in(roomId).emit("recive", { msg, name, time });
     });
-    socket.on('Compile',({outputRes, roomId})=>{
-        // console.log(outputRes,roomId);
-        socket.in(roomId).emit("Compile",{outputRes});
+    socket.on(ACTIONS.COMPILED,({outputRes, roomId})=>{
+        socket.in(roomId).emit(ACTIONS.COMPILED,{outputRes});
     })
-    socket.on('Onrun',({roomId})=>{
-        socket.in(roomId).emit("Onrun",{running:true});
+    socket.on(ACTIONS.RUN_CHANGE,({running,roomId})=>{
+        socket.in(roomId).emit(ACTIONS.RUN_CHANGE,{running});
     })
-    socket.on('CustomInp',({custInp, roomId})=>{
-        socket.in(roomId).emit("CustomInp",{custInp});
+    socket.on(ACTIONS.CUSTOM_INP_CHANGE,({custInp, roomId})=>{
+        socket.in(roomId).emit(ACTIONS.CUSTOM_INP_CHANGE,{custInp});
+    })
+    socket.on(ACTIONS.LANG_CHANGE,({lang,roomId})=>{
+        socket.in(roomId).emit(ACTIONS.LANG_CHANGE,{lang});
     })
     socket.on('disconnecting', () => {
         const rooms = [...socket.rooms];

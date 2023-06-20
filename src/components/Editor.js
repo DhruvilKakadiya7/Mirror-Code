@@ -20,7 +20,7 @@ import { languageOptions } from '../constants/languageOptions';
 import Select from 'react-select';
 import SplitPane, { Pane } from 'split-pane-react';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-const Editor = ({ socketRef, roomId, onCodeChange }) => {
+const Editor = ({ socketRef, roomId, onCodeChange, onInpChnage, onRunChnage, onOutputChange, onLangChange }) => {
 
     const editorRef = useRef(null);
     const [customInput, setCustomInput] = useState(``);
@@ -57,11 +57,12 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                 }
             });
             const textInp = document.getElementById('custom-input-text');
-            console.log(textInp);
+            // console.log(textInp);
             if (textInp) {
                 textInp.addEventListener('input', (event) => {
-                    console.log(textInp.value);
-                    socketRef.current.emit('CustomInp', { custInp: textInp.value, roomId });
+                    // console.log(textInp.value);
+                    onInpChnage(textInp.value);
+                    socketRef.current.emit(ACTIONS.CUSTOM_INP_CHANGE, { custInp: textInp.value, roomId });
                 })
             }
         }
@@ -77,24 +78,29 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                     }
                 });
 
-                socketRef.current.on("Compile", ({ outputRes }) => {
+                socketRef.current.on(ACTIONS.COMPILED, ({ outputRes }) => {
                     setOutputDetails(outputRes);
                     setRunning(false);
-                    toast.success('Compiled Successfully.');
+                    onOutputChange(outputRes);
+                    // toast.success('Compiled Successfully.');
                 });
 
-                socketRef.current.on("Input", ({ inp }) => {
-                    setCustomInput(inp);
-                    setRunning(true);
-                })
 
-                socketRef.current.on('CustomInp', ({ custInp }) => {
+                socketRef.current.on(ACTIONS.CUSTOM_INP_CHANGE, ({ custInp }) => {
                     setCustomInput(custInp);
+                    onInpChnage(custInp);
                 })
 
-                socketRef.current.on('Onrun',({running})=>{
+                socketRef.current.on(ACTIONS.RUN_CHANGE,({running})=>{
                     setRunning(running);
+                    onRunChnage(running);
                 });
+
+                socketRef.current.on(ACTIONS.LANG_CHANGE,({lang})=>{
+                    // console.log(lang);
+                    onLangChange(lang);
+                    setLanguage(lang);
+                })
             }
         }
 
@@ -107,12 +113,13 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
 
     const handleCompile = async () => {
         setRunning(true);
+        onRunChnage(true);
         const compileData = {
             language_id: languge.id,
             source_code: btoa(Code),
             stdin: btoa(customInput),
         };
-        socketRef.current.emit('Onrun',{roomId});
+        socketRef.current.emit(ACTIONS.RUN_CHANGE,{running:true,roomId});
         const options = {
             method: 'POST',
             url: process.env.REACT_APP_RAPID_API_URL,
@@ -128,12 +135,15 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
             },
             data: compileData
         };
+        // console.log(options);
         try {
             const response = await axios.request(options);
             checkStatus(response.data.token);
         } catch (err) {
             let error = err.response ? err.response.data : err;
             setRunning(false);
+            onRunChnage(false);
+            socketRef.current.emit(ACTIONS.RUN_CHANGE,{running:false,roomId});
             console.log(error);
         }
     };
@@ -157,26 +167,36 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                 return
             } else {
                 setRunning(false);
+                onRunChnage(false);
                 setOutputDetails(response.data);
-                socketRef.current.emit('Compile', { outputRes: response.data, roomId });
+                onOutputChange(response.data);
+                socketRef.current.emit(ACTIONS.COMPILED, { outputRes: response.data, roomId });
                 toast.success('Compiled Successfully.');
                 return
             }
         } catch (err) {
             console.log("err", err);
             setRunning(false);
+            onRunChnage(false);
+            socketRef.current.emit(ACTIONS.RUN_CHANGE,{running:false,roomId});
             toast.error('Compilation failed');
         }
     };
 
-    const clrInpOut = () => {
+    const clrInpOut = async () => {
         setCustomInput(``);
         setOutputDetails(null);
+        socketRef.current.emit(ACTIONS.CUSTOM_INP_CHANGE, { custInp: ``, roomId });
+        socketRef.current.emit(ACTIONS.COMPILED, { outputRes: null, roomId });
     };
 
     const onSelectChange = (sl) => {
+        // console.log(sl);
+        onLangChange(sl);
+        socketRef.current.emit(ACTIONS.LANG_CHANGE,{lang:sl,roomId});
         setLanguage(sl);
     };
+    // onLangChange(languageOptions[0]);
     return (
         <div id="xxx ">
             <div className="mainEditor">
@@ -195,8 +215,7 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
                             <Select
                                 placeholder={`Filter By Category`}
                                 options={languageOptions}
-                                // styles={customStyles}
-                                defaultValue={languageOptions[0]}
+                                value={languge}
                                 onChange={(selectedOption) => onSelectChange(selectedOption)}
                             />
                         </div>
