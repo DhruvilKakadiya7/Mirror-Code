@@ -659,90 +659,6 @@ iframe {
   bottom: 0;
 }
 
-/* #chat{
-  display: none;
-  flex-direction: column;
-}
-.upperpart{
-  flex:80%;
-}
-
-.chat_message {
-  padding: 2px 5px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.message_sender_avatar{
-  flex: 5%;
-}
-.chat_message_content {
-  margin: 0px 5px;
-  padding: 5px 8px;
-  display: flex;
-  flex: 95%;
-  border-radius: 5px;
-  flex-direction: column;
-  background-color: rgb(245, 238, 229);
-  font-size: small;
-  color: black;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-  min-width: 10px;
-}
-.chat_message_upper_row {
-  display: flex;
-  padding: 0px 0px 5px;
-  padding-bottom: 0px;
-  white-space: pre-wrap;
-  word-break: break-all;
-  border-bottom: 2px dotted grey;
-}
-
-.chat_message_sender_name,
-.chat_message_time {
-  padding: 0px 8px 0px 0px;
-}
-
-.chat_actual_message{
-  height: auto;
-  white-space: pre-wrap;
-  word-break: break-all;
-}
-
-#outlined-basic{
-  margin-bottom: 5%;
-}
-
-
-.chat_messages_block{
-  min-height: 55vh;
-  max-height: 55vh;
-  overflow-y: scroll;
-}
-
-.chat_messages_block::-webkit-scrollbar {
-  display: none;
-}
-
-#message-box{
-  flex: 70%;
-}
-
-.sendbtn{
-  flex: 30%
-}
-
-#message-box ::-webkit-scrollbar{
-  display: none;
-}
-
-#chat_send{
-  flex: 1;
-  margin-top: 3%;
-  display: flex;
-  flex-direction: column;
-} */
 #chat{
   height: 100vh;
   display: none;
@@ -783,9 +699,7 @@ iframe {
   align-items: center;
 }
 
-/* .message_sender_avatar{
-  flex: 5%;
-} */
+
 .chat_message_content {
   margin: 0px 5px;
   padding: 5px 8px;
