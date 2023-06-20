@@ -1,7 +1,7 @@
 # Mirror-Code
 [![Netlify Status](https://api.netlify.com/api/v1/badges/b4fec894-1c75-48be-942a-092c06ce20dd/deploy-status)](https://app.netlify.com/sites/mirrorcode/deploys)
 
-Check it here https://mirrorcode.netlify.app/
+Check it here [mirrorcode](https://www.mirrorcode.tech/)
 
 ## To-Do
 - [x] Add Compiler
