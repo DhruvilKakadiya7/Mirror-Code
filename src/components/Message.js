@@ -1,8 +1,9 @@
-import { Avatar } from "@mui/material";
+// import { Avatar } from "@mui/material";
 import React from "react";
-import { v4 as uuidv4 } from 'uuid'
+// import { v4 as uuidv4 } from 'uuid'
 const Message = ({ uid, sender, time, content }) => {
   function stringToColor(string) {
+    console.log(string);
     let hash = 0;
     let i;
 
@@ -16,7 +17,7 @@ const Message = ({ uid, sender, time, content }) => {
       const value = (hash >> (i * 8)) & 0xff;
       color += `00${value.toString(16)}`.slice(-2);
     }
-
+    console.log(color);
     return color;
   }
 
@@ -24,8 +25,8 @@ const Message = ({ uid, sender, time, content }) => {
     return {
       sx: {
         bgcolor: stringToColor(name),
-        width: 35,
-        height: 35,
+        width: 20,
+        height: 25,
         radius: 5,
       },
       children: `${name.split(' ')[0][0]}${(name.split(' ').length > 1?name.split(' ')[1][0]:name.split(' ')[0][1])}`,
@@ -33,11 +34,6 @@ const Message = ({ uid, sender, time, content }) => {
   }
   return (
     <div className="chat_message" key={uid}>
-      <div className="message_sender_avatar">
-        <Avatar 
-          {...stringAvatar(sender)} 
-        />
-      </div>
       <div className="chat_message_content">
         <div className="chat_message_upper_row">
           <div className="chat_message_sender_name">{sender}</div>

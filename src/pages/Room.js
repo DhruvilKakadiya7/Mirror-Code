@@ -10,6 +10,8 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import SplitPane, { Pane } from 'split-pane-react';
 import 'split-pane-react/esm/themes/default.css';
 import { languageOptions } from '../constants/languageOptions';
+import ForumTwoToneIcon from '@mui/icons-material/ForumTwoTone';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const Room = () => {
     const socketRef = useRef(null);
@@ -19,18 +21,18 @@ const Room = () => {
     const codeRef = useRef(null);
     const { roomId } = useParams();
     const usr = { name: location.state?.username };
-    const [sizes, setSizes] = useState(['86%', '14%']);
+    const [sizes, setSizes] = useState(['84%', '16%']);
     const customInpRef = useRef(null);
     const outputRef = useRef(null);
     const runningRef = useRef(null);
     const langRef = useRef(null);
-    
+
     useEffect(() => {
         const init = async () => {
             socketRef.current = await initSocket();
-            customInpRef.current="";
-            langRef.current=languageOptions[0];
-            runningRef.current=false;
+            customInpRef.current = "";
+            langRef.current = languageOptions[0];
+            runningRef.current = false;
             socketRef.current.on('connect_error', (err) => handleErrors(err));
             socketRef.current.on('connect_failed', (err) => handleErrors(err));
 
@@ -50,18 +52,13 @@ const Room = () => {
                     if (username !== location.state?.username) {
                         toast.success(`${username} joined the room.`);
                         console.log(`${username} joined.`);
-                    } 
+                    }
                     setUsers(users);
                     socketRef.current.emit(ACTIONS.SYNC_CODE, {
                         code: codeRef.current,
                         socketId,
                     });
-                    // console.log("sync",document.getElementById('custom-input-text').value,langRef.current);
-                    // console.log('Input',customInpRef.current);
-                    // console.log('output',outputRef.current);
-                    // console.log('language',langRef.current);
-                    // console.log('running',runningRef.current);
-                    socketRef.current.emit(ACTIONS.SYNC_INP_OUT_SEC,{
+                    socketRef.current.emit(ACTIONS.SYNC_INP_OUT_SEC, {
                         inp: customInpRef.current,
                         out: outputRef.current,
                         lang: langRef.current,
@@ -93,7 +90,7 @@ const Room = () => {
             socketRef.current.off(ACTIONS.JOINED);
             socketRef.current.off(ACTIONS.DISCONNECTED);
         };
-    }, [location.state?.username,reactNavigator,roomId]);
+    }, [location.state?.username, reactNavigator, roomId]);
 
 
 
@@ -112,8 +109,8 @@ const Room = () => {
         document.getElementById("sidebar").style.display = "none";
         // background-color:#7d777d;
         document.getElementById("aside").style.background = "#27374D";
-        document.getElementById("msg").style.display = "none";
-        document.getElementById("leave").style.display = "none";
+        document.getElementById("btnlist").style.display = "none";
+        // document.getElementById("leave").style.display = "none";
     }
 
     const leaveRoom = () => {
@@ -131,8 +128,8 @@ const Room = () => {
                 sizes={sizes}
                 onChange={setSizes}
             >
-                <Pane minSize='50%' maxSize='90%'>
-                <div className='editorWrap'>
+                <Pane minSize='50%' maxSize='84%'>
+                    <div className='editorWrap'>
                         <Editor
                             roomId={roomId}
                             socketRef={socketRef}
@@ -140,49 +137,50 @@ const Room = () => {
                             onCodeChange={(code) => {
                                 codeRef.current = code;
                             }}
-                            onInpChnage={(inp)=>{
+                            onInpChnage={(inp) => {
                                 customInpRef.current = inp;
                             }}
-                            onRunChnage={(running)=>{
+                            onRunChnage={(running) => {
                                 runningRef.current = running;
                             }}
-                            onOutputChange={(output)=>{
-                                outputRef.current=output;
+                            onOutputChange={(output) => {
+                                outputRef.current = output;
                             }}
-                            onLangChange={(lang)=>{
-                                langRef.current=lang;
+                            onLangChange={(lang) => {
+                                langRef.current = lang;
                             }}
                         />
                     </div>
                 </Pane>
                 <div className='aside' id='aside'>
-                        <MessageBox socketRef={socketRef} usr={usr} roomId={roomId}></MessageBox>
+                    <MessageBox socketRef={socketRef} usr={usr} roomId={roomId}></MessageBox>
 
-                        <div className='asideInner' id='sidebar'>
-                            <div className="parent-element">
-                                <div className="child-element magenta"><h4>Online:</h4></div>
-                                <div className="child-element green tooltip" title='copy room ID'>
-                                    <ContentCopyIcon id="copy-btn" onClick={cpyRoomID} />
-                                </div>
-                            </div>
-                            <br></br>
-                            <div className='usersList'>
-                                {users.map((user) => (
-                                    <User
-                                        key={user.socketId}
-                                        username={user.username}
-                                    />
-                                ))}
+                    <div className='asideInner' id='sidebar'>
+                        <div className="parent-element">
+                            <div className="child-element magenta"><h4>Online:</h4></div>
+                            <div className="child-element green tooltip" title='copy room ID'>
+                                <ContentCopyIcon id="copy-btn" onClick={cpyRoomID} />
                             </div>
                         </div>
-
-                        <button className='btnxx copyBtn' id='msg' onClick={openChat}>
-                            Message Room
+                        <br></br>
+                        <div className='usersList'>
+                            {users.map((user) => (
+                                <User
+                                    key={user.socketId}
+                                    username={user.username}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                    <div className='buttonList' id="btnlist">
+                        <button className='btnxx copyBtn' id='msg' onClick={openChat} title="message room">
+                            <ForumTwoToneIcon style={{ height: '35px', width: '30px' }}></ForumTwoToneIcon>
                         </button>
-                        <button className='btnxx2 leaveBtn' id="leave" onClick={leaveRoom}>
-                            Leave
+                        <button className='btnxx2 leaveBtn' id="leave" onClick={leaveRoom} title="Leave Room">
+                            <LogoutIcon style={{ height: '35px', width: '30px' }}></LogoutIcon>
                         </button>
                     </div>
+                </div>
             </SplitPane>
 
 
