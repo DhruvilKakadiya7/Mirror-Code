@@ -56,7 +56,7 @@ Fork, then download or clone the repo.
 git clone https://github.com/DhruvilKakadiya7/Mirror-Code.git
 ```
 
-Install the dependecy for server and react
+Install the dependency for the server and react.
 ```
 npm install
 ```
